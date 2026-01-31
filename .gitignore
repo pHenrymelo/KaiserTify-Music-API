@@ -1,0 +1,37 @@
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+# commonly named .venv, venv, or env
+.venv/
+venv/
+env/
+
+# Environment variables file (if used)
+# contains sensitive information and should not be committed
+.env
+
+# Editor/IDE specific files
+# VSCode
+.vscode/
+
+# JetBrains IDEs (PyCharm, etc.)
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Logs and output files
+*.log
+*.out
+
+# Testing/Coverage
+.coverage
+htmlcov/
+
+# Docker
+.dockerignore
