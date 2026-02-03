@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from uuid import UUID
+
 from app.domain.user import User
 from app.domain.value_objects.email import Email
 from app.domain.value_objects.username import Username
@@ -11,6 +13,10 @@ class UserRepository(ABC):
 
   @abstractmethod
   def save(self, user: User) -> None:
+    pass
+
+  @abstractmethod
+  def get_by_id(self, user_id: UUID) -> User | None:
     pass
 
   @abstractmethod

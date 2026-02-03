@@ -1,6 +1,6 @@
 from fastapi import HTTPException, Depends, status
 
-from app.http.controllers.dependencies.repositories import get_user_repository
+from app.http.dependencies.repositories import get_user_repository
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import RegisterUserRequest, UserResponse
 from app.services.register_user_service import RegisterUserService

@@ -1,7 +1,7 @@
 
 from fastapi import Depends, status, HTTPException
 
-from app.http.controllers.dependencies.repositories import get_user_repository
+from app.http.dependencies.repositories import get_user_repository
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import LoginRequest, TokenResponse
 from app.services.auth.token_service import TokenService

@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.orm import Session
 from sqlalchemy.testing.suite.test_reflection import users
 
@@ -36,6 +38,10 @@ class SQLAlchemyUserRepository(UserRepository):
       .filter(UserModel.email == email.value)
       .first()
     )
+    return to_domain(model) if model else None
+
+  def get_by_id(self, user_id: UUID) -> User | None:
+    model = self.session.get(UserModel, user_id)
     return to_domain(model) if model else None
 
   def exists_by_username(self, username: Username) -> bool:
