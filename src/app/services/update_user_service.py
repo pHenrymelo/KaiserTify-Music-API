@@ -14,9 +14,17 @@ class UpdateUserService:
           username: str | None,
           email: str | None
   ) -> User:
+
     if username:
+      username_vo = Username(username)
+      if self.user_repository.exists_by_username(username_vo):
+        raise ValueError("Username already taken")
       user.change_username(Username(username))
+
     if email:
+      email_vo = Email(email)
+      if self.user_repository.exists_by_email(email_vo):
+        raise ValueError("Email already in use!")
       user.change_email(Email(email))
 
     self.user_repository.save(user)

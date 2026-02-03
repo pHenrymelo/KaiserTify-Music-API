@@ -59,3 +59,11 @@ class SQLAlchemyUserRepository(UserRepository):
       .first()
       is not None
     )
+
+  def delete(self, user: User) -> None:
+    model = self.session.get(UserModel, user.id)
+    if not model:
+      return
+
+    self.session.delete(model)
+    self.session.commit()

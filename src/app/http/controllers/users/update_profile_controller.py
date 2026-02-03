@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 
 from app.domain.user import User
 from app.http.dependencies.repositories import get_user_repository
@@ -16,11 +16,17 @@ def update_profile(
 ) -> UserResponse:
   service = UpdateUserService(user_repository)
 
-  user = service.execute(
-    user=current_user,
-    username=payload.username,
-    email=payload.email
-  )
+  try:
+    user = service.execute(
+      user=current_user,
+      username=payload.username,
+      email=payload.email
+    )
+  except ValueError as exc:
+    raise HTTPException(
+      status_code=status.HTTP_400_BAD_REQUEST,
+      detail=str(exc)
+    )
 
   return UserResponse(
     id=user.id,

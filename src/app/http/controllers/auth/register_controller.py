@@ -27,6 +27,6 @@ def register_user(
   return UserResponse(
     id=user.id,
     username=user.username.value,
-    email=user.email.value,
+    email=user.email,
     role=user.role
   )

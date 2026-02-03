@@ -30,3 +30,7 @@ class UserRepository(ABC):
   @abstractmethod
   def exists_by_username(self, username: Username) -> bool:
     pass
+
+  @abstractmethod
+  def delete(self, user: User) -> None:
+    pass
