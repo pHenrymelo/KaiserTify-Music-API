@@ -1,7 +1,5 @@
 from uuid import UUID
-
 from sqlalchemy.orm import Session
-from sqlalchemy.testing.suite.test_reflection import users
 
 from app.repositories.user_repository import UserRepository
 from app.domain.user import User

@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime, timedelta
 
 from jose import jwt
@@ -7,10 +8,29 @@ from app.domain.user import User
 
 
 class TokenService:
+
+  ACCESS_EXPIRE_MIN = 15
+  REFRESH_EXPIRE_DAYS = 7
+  ALGORITHM = "HS256"
+
   def create_access_token(self, user: User) -> str:
     payload = {
       "sub": str(user.id),
       "role": user.role.value,
-      "exp": datetime.utcnow() + timedelta(minutes=30)
+      "type": "access",
+      "iat": datetime.utcnow(),
+      "exp": datetime.utcnow() + timedelta(minutes=self.ACCESS_EXPIRE_MIN)
     }
-    return jwt.encode(payload, settings.secret_key, algorithm="HS256")
+    return jwt.encode(payload, settings.secret_key, algorithm=self.ALGORITHM)
+
+  def create_refresh_token(self, user: User) -> str:
+    payload = {
+      "sub": str(user.id),
+      "type": "refresh",
+      "iat": datetime.utcnow(),
+      "exp": datetime.utcnow() + timedelta(days=self.REFRESH_EXPIRE_DAYS)
+    }
+    return jwt.encode(payload, settings.secret_key, algorithm=self.ALGORITHM)
+
+  def hash_refresh_token(self, token: str) -> str:
+    return hashlib.sha256(token.encode()).hexdigest()
