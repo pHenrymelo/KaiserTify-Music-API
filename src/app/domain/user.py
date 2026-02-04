@@ -8,17 +8,41 @@ from app.domain.value_objects.username import Username
 
 @dataclass
 class User:
-  id: UUID
-  username: Username
-  email: Email
-  hashed_password: str
-  role: Role
+  _id: UUID
+  _username: Username
+  _email: Email
+  _hashed_password: str
+  _role: Role
 
   def __post_init__(self) -> None:
-
-
-    if not isinstance(self.role, Role):
+    if not isinstance(self._id, UUID):
+      raise ValueError("Invalid id")
+    if not isinstance(self._username, Username):
+      raise ValueError("Invalid username")
+    if not isinstance(self._email, Email):
+      raise ValueError("Invalid email")
+    if not isinstance(self._role, Role):
       raise ValueError("Invalid role")
+
+  @property
+  def id(self) -> UUID:
+    return self._id
+
+  @property
+  def username(self) -> Username:
+    return self._username
+
+  @property
+  def hashed_password(self) -> str:
+    return self._hashed_password
+
+  @property
+  def email(self) -> Email:
+    return self._email
+
+  @property
+  def role(self) -> Role:
+    return self._role
 
   @classmethod
   def create(
@@ -29,11 +53,29 @@ class User:
           role: Role
   ) -> "User":
     return cls(
-      id=uuid4(),
-      username=username,
-      email=email,
-      hashed_password=hashed_password,
-      role=role
+      _id=uuid4(),
+      _username=username,
+      _email=email,
+      _hashed_password=hashed_password,
+      _role=role
+    )
+
+  @classmethod
+  def reconstitute(
+          cls,
+          *,
+          id: UUID,
+          username: Username,
+          email: Email,
+          hashed_password: str,
+          role: Role
+  ) -> "User":
+    return cls(
+      _id=id,
+      _username=username,
+      _email=email,
+      _hashed_password=hashed_password,
+      _role=role
     )
 
   def is_artist(self):
@@ -42,3 +84,19 @@ class User:
   def is_listener(self):
     return self.role == Role.LISTENER
 
+  def change_username(self, username: Username):
+    self._username = username
+
+  def change_email(self, email: Email):
+    self._email = email
+
+  def change_password(self, hashed_password: str):
+    if not hashed_password:
+      raise ValueError("Invalid password")
+    self._hashed_password = hashed_password
+
+  def promote_to_artist(self):
+    self._role = Role.ARTIST
+
+  def demote_to_listener(self):
+    self._role = Role.LISTENER

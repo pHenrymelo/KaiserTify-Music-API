@@ -1,7 +1,5 @@
 from uuid import UUID
-
 from sqlalchemy.orm import Session
-from sqlalchemy.testing.suite.test_reflection import users
 
 from app.repositories.user_repository import UserRepository
 from app.domain.user import User
@@ -59,3 +57,11 @@ class SQLAlchemyUserRepository(UserRepository):
       .first()
       is not None
     )
+
+  def delete(self, user: User) -> None:
+    model = self.session.get(UserModel, user.id)
+    if not model:
+      return
+
+    self.session.delete(model)
+    self.session.commit()

@@ -5,7 +5,7 @@ from app.domain.value_objects.username import Username
 from app.repositories.sql_alchemy.models.user_model import UserModel
 
 def to_domain(model: UserModel) -> User:
-  return User(
+  return User.reconstitute(
     id=model.id,
     username=Username(model.username),
     email=Email(model.email),

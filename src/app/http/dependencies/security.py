@@ -21,16 +21,23 @@ def get_current_user(
       settings.secret_key,
       algorithms=["HS256"]
     )
-    user_id: str | None = payload.get("sub")
-    if not user_id:
-      raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid Token."
-      )
   except JWTError:
     raise HTTPException(
       status_code=status.HTTP_401_UNAUTHORIZED,
       detail="Invalid Token."
+    )
+
+  if payload.get("type") != "access":
+    raise HTTPException(
+      status_code=status.HTTP_401_UNAUTHORIZED,
+      detail="Invalid token type"
+    )
+
+  user_id = payload.get("sub")
+  if not user_id:
+    raise HTTPException(
+      status_code=status.HTTP_401_UNAUTHORIZED,
+      detail="Invalid token payload"
     )
 
   user = user_repository.get_by_id(UUID(user_id))
