@@ -1,19 +1,20 @@
 
-from fastapi import Depends, status, HTTPException
+from fastapi import Depends, status, HTTPException, Response
 
 from app.http.dependencies.repositories import get_user_repository, get_refresh_token_repository
 from app.repositories.refresh_token_repository import RefreshTokenRepository
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import LoginRequest, TokenResponse
+from app.schemas.auth import LoginRequest, AccessTokenResponse
 from app.services.auth.token_service import TokenService
 from app.services.authenticate_user_service import AuthenticateUserService
 
 
 def login(
     payload: LoginRequest,
+    response: Response,
     user_repository: UserRepository = Depends(get_user_repository),
     refresh_token_repository: RefreshTokenRepository = Depends(get_refresh_token_repository)
-) -> TokenResponse:
+):
   service = AuthenticateUserService(
     user_repository=user_repository,
     refresh_token_repository=refresh_token_repository,
@@ -28,4 +29,18 @@ def login(
       detail="Invalid credentials."
     )
 
-  return TokenResponse(**tokens)
+  SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7
+  response.set_cookie(
+    key="refresh_token",
+    value=tokens["refresh_token"],
+    httponly=True,
+    secure=False,
+    samesite="lax",
+    max_age=SEVEN_DAYS_IN_SECONDS,
+    path="/auth/refresh"
+  )
+
+  return {
+    "access_token": tokens["access_token"],
+    "token_type": "bearer",
+  }
