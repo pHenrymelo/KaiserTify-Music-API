@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from app.domain.user import User
 from app.domain.value_objects.email import Email
 from app.domain.value_objects.username import Username
@@ -23,8 +25,17 @@ class InMemoryUserRepository(UserRepository):
         return user
     return None
 
+  def get_by_id(self, user_id: UUID) -> User | None:
+    for user in self._users:
+      if user.id == user_id:
+        return user
+    return None
+
   def exists_by_username(self, username: Username) -> bool:
     return any(user.username == username for user in self._users)
 
   def exists_by_email(self, email: Email) -> bool:
     return any(user.email == email for user in self._users)
+
+  def delete(self, user: User) -> None:
+    self._users = [u for u in self._users if u.id != user.id]

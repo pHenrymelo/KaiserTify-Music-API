@@ -1,9 +1,8 @@
 import uuid
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, declarative_base
-
-Base = declarative_base()
+from sqlalchemy.orm import Mapped, mapped_column
+from app.repositories.sql_alchemy.models.base import Base
 
 class UserModel(Base):
   __tablename__ = "users"

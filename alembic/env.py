@@ -1,9 +1,11 @@
 from logging.config import fileConfig
 from alembic import context
-from sqlalchemy import pool
 from app.core.database import engine
 
-from app.repositories.sql_alchemy.models.user_model import Base
+from app.repositories.sql_alchemy.models.user_model import UserModel
+from app.repositories.sql_alchemy.models.refresh_token_model import RefreshTokenModel
+
+from app.repositories.sql_alchemy.models.base import Base
 
 config = context.config
 
