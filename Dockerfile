@@ -1,12 +1,14 @@
 FROM python:3.11-slim AS base
 
 ENV PYTHONDONTWHRITEBYTECODE=1
+ENV PYTHONPATH=/app/src
 ENV PYTHONBUFFERED=1
 
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
     build-essential \
+    postgresql-client \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
